@@ -471,7 +471,7 @@ public abstract void getCenter(Point3d center);
 		    delta.normalize();
 		    System.err.println("p->n direction: " + delta);
 		    Matrix3d hMatrix = new Matrix3d();
-		    // check using the the javax.vecmath routine
+		    // check using the the org.jogamp.vecmath routine
 		    hMatrix.m00 = h11;
 		    hMatrix.m01 = h12;
 		    hMatrix.m02 = h13;
