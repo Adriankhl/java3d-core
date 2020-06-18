@@ -101,7 +101,7 @@ class Jogl2es2Pipeline extends Jogl2es2DEPPipeline
 	//Note this is VERY expensive and should be false unless debugging
 	private static final boolean DO_OUTPUT_ERRORS = false;
 	// Currently prints for entry points already implemented
-	static final boolean VERBOSE = false;
+	static final boolean VERBOSE = true;
 	// Debugging output for graphics configuration selection
 	private static final boolean DEBUG_CONFIG = false;
 	// Prints extra debugging information

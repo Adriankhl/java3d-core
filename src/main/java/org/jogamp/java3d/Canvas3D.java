@@ -446,11 +446,11 @@ public class Canvas3D extends Canvas {
     // Read-only flag that indicates whether scene antialiasing
     // is supported for this canvas.
     //
-    boolean sceneAntialiasingAvailable;
-    boolean sceneAntialiasingMultiSamplesAvailable;
+    //boolean sceneAntialiasingAvailable;
+    //boolean sceneAntialiasingMultiSamplesAvailable;
 
     // Use to see whether antialiasing is already set
-    private boolean antialiasingSet = false;
+    //private boolean antialiasingSet = false;
 
     //
     // Read-only flag that indicates the size of the texture color
@@ -2394,7 +2394,7 @@ ArrayList<TextureRetained> textureIDResourceTable = new ArrayList<TextureRetaine
         maxAvailableTextureUnits = Math.max(maxTextureUnits, maxTextureImageUnits);
         // reset 'antialiasingSet' if new context is created for an already existing Canvas3D,
         // e.g. resizing offscreen Canvas3D
-        antialiasingSet = false;
+        //antialiasingSet = false;
 
         return retVal;
     }
@@ -3661,16 +3661,16 @@ ArrayList<TextureRetained> textureIDResourceTable = new ArrayList<TextureRetaine
 	keys.add("stereoAvailable");
 	values.add(new Boolean(stereoAvailable));
 
-	keys.add("sceneAntialiasingAvailable");
-	values.add(new Boolean(sceneAntialiasingAvailable));
+	//keys.add("sceneAntialiasingAvailable");
+	//values.add(new Boolean(sceneAntialiasingAvailable));
 
-	keys.add("sceneAntialiasingNumPasses");
+	//keys.add("sceneAntialiasingNumPasses");
 
-	if (sceneAntialiasingAvailable) {
-	    pass = (sceneAntialiasingMultiSamplesAvailable ?
-		    1: Renderer.NUM_ACCUMULATION_SAMPLES);
-	}
-	values.add(new Integer(pass));
+	//if (sceneAntialiasingAvailable) {
+	 //   pass = (sceneAntialiasingMultiSamplesAvailable ?
+	//	    1: Renderer.NUM_ACCUMULATION_SAMPLES);
+	//}
+	//values.add(new Integer(pass));
 
 	keys.add("stencilSize");
 	// Return the actual stencil size if the user owns it, otherwise
@@ -4684,19 +4684,19 @@ void swapBuffers(Context ctx, Drawable drawable) {
     }
 
     // This is the native method for doing accumulation.
-    void accum(Context ctx, float value) {
-        Pipeline.getPipeline().accum(ctx, value);
-    }
+   // void accum(Context ctx, float value) {
+    //    Pipeline.getPipeline().accum(ctx, value);
+    //}
 
     // This is the native method for doing accumulation return.
-    void accumReturn(Context ctx) {
-        Pipeline.getPipeline().accumReturn(ctx);
-    }
+    //void accumReturn(Context ctx) {
+    //    Pipeline.getPipeline().accumReturn(ctx);
+    //}
 
     // This is the native method for clearing the accumulation buffer.
-    void clearAccum(Context ctx) {
-        Pipeline.getPipeline().clearAccum(ctx);
-    }
+    //void clearAccum(Context ctx) {
+    //    Pipeline.getPipeline().clearAccum(ctx);
+    //}
 
     // This is the native method for getting the number of lights the underlying
     // native library can support.
@@ -4743,15 +4743,15 @@ void swapBuffers(Context ctx, Drawable drawable) {
         Pipeline.getPipeline().setFogEnableFlag(ctx, enableFlag);
     }
 
-boolean isAntialiasingSet() {
-	return antialiasingSet;
-}
+//boolean isAntialiasingSet() {
+//	return antialiasingSet;
+//}
 
     // Setup the full scene antialising in D3D and ogl when GL_ARB_multisamle supported
-    void setFullSceneAntialiasing(Context ctx, boolean enable) {
-        Pipeline.getPipeline().setFullSceneAntialiasing(ctx, enable);
-        antialiasingSet = enable;
-    }
+//    void setFullSceneAntialiasing(Context ctx, boolean enable) {
+//        Pipeline.getPipeline().setFullSceneAntialiasing(ctx, enable);
+//        antialiasingSet = enable;
+//    }
 
     // Native method to update separate specular color control
     void updateSeparateSpecularColorEnable(Context ctx, boolean control) {
@@ -4981,12 +4981,12 @@ boolean isAntialiasingSet() {
 	return Pipeline.getPipeline().getStencilSize(this);
     }
 
-    boolean hasSceneAntialiasingMultisample() {
-	return Pipeline.getPipeline().hasSceneAntialiasingMultisample(this);
-    }
+//    boolean hasSceneAntialiasingMultisample() {
+//	return Pipeline.getPipeline().hasSceneAntialiasingMultisample(this);
+ //   }
 
-    boolean hasSceneAntialiasingAccum() {
-	return Pipeline.getPipeline().hasSceneAntialiasingAccum(this);
-    }
+ //   boolean hasSceneAntialiasingAccum() {
+//	return Pipeline.getPipeline().hasSceneAntialiasingAccum(this);
+ //   }
 
 }

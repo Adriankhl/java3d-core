@@ -82,7 +82,7 @@ public class GraphicsConfigTemplate3D extends GraphicsConfigTemplate {
         depthSize = 16;
         stencilSize = 0;
         redSize = greenSize = blueSize = 2;
-        sceneAntialiasing = UNNECESSARY;
+        sceneAntialiasing = PREFERRED;
     }
 
     /**
