@@ -55,10 +55,10 @@ abstract class LightRetained extends LeafRetained {
     // The color of the light (white by default).
     Color3f	color = new Color3f(1.0f, 1.0f, 1.0f);
 
-// This node which specifies the hierarchical scope of the
-// light. A null reference means that this light has universal
-// scope.
-Vector<GroupRetained> scopes = new Vector<GroupRetained>();
+	// This node which specifies the hierarchical scope of the
+	// light. A null reference means that this light has universal
+	// scope.
+	Vector<GroupRetained> scopes = new Vector<GroupRetained>();
 
     /**
      * The Boundary object defining the lights's region of influence.
@@ -69,6 +69,16 @@ Vector<GroupRetained> scopes = new Vector<GroupRetained>();
      * The bounding leaf reference
      */
     BoundingLeafRetained boundingLeaf = null;
+    
+    /**
+     * Indicates the renderer should do a loop and generate a shadow map depth texture
+     * to hand into the lighting data of shaders
+     */
+    boolean	hasShadowMap = false;
+    
+    int shadowMapSamplerId = -1;
+    int shadowMapFBOId = -1;
+    double[] projMatrix;
 
     /**
      * The transformed value of the applicationRegion.
@@ -125,10 +135,10 @@ Vector<GroupRetained> scopes = new Vector<GroupRetained>();
     boolean isViewScoped = false;
 
 
-/**
- * Temporary list of newly added mirror lights, during any setlive
- */
-ArrayList<LightRetained> newlyAddedMirrorLights = new ArrayList<LightRetained>();
+	/**
+	 * Temporary list of newly added mirror lights, during any setlive
+	 */
+	ArrayList<LightRetained> newlyAddedMirrorLights = new ArrayList<LightRetained>();
 
     // Target threads to be notified when light changes
     static final int targetThreads = J3dThread.UPDATE_RENDERING_ENVIRONMENT |
@@ -494,6 +504,31 @@ Iterator<Group> getAllScopes() {
     BoundingLeaf getInfluencingBoundingLeaf() {
 	return  (boundingLeaf != null ?
 		 (BoundingLeaf)boundingLeaf.source : null);
+    }
+    
+    
+    
+    void initShadowMap(boolean generateShadowMap) {
+    	hasShadowMap = generateShadowMap;
+    }
+
+    /**
+     *  
+     */
+    void setShadowMap(boolean generateShadowMap) {
+    	initShadowMap(generateShadowMap);
+
+    	//FIXME: generate message id
+    	sendMessage(BOUNDINGLEAF_CHANGED,
+    		     (boundingLeaf != null ?
+    		      boundingLeaf.mirrorBoundingLeaf : null));
+        }
+
+    /**
+     * 
+     */
+    boolean hasShadowMap() {
+    	return hasShadowMap;
     }
 
     /**

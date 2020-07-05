@@ -193,7 +193,7 @@ class PointLightRetained extends LightRetained {
                 attenuation.x, linearAttenuationInEc,
                 quadraticAttenuationInEc,
                 xformPosition.x, xformPosition.y,
-                xformPosition.z);
+                xformPosition.z, shadowMapSamplerId, projMatrix);
     }
 
     @Override

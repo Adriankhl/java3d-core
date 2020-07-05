@@ -35,16 +35,11 @@ import java.util.Iterator;
 import java.util.concurrent.CountDownLatch;
 import java.util.logging.Level;
 
+import org.jogamp.vecmath.Point3d;
+import org.jogamp.vecmath.Vector3d;
+import org.jogamp.vecmath.Vector3f;
+
 class Renderer extends J3dThread {
-
-	// This action causes this thread to wait
-	static final int				WAIT						= 0;
-
-	// This action causes this thread to notify the view, and then wait.
-	static final int				NOTIFY_AND_WAIT				= 1;
-
-	// This action causes this thread to be notified
-	static final int				NOTIFY						= 2;
 
 	// The following are DecalGroup rendering states
 	static final int				DECAL_NONE					= 0;
@@ -52,15 +47,15 @@ class Renderer extends J3dThread {
 	static final int				DECAL_NTH_CHILD				= 2;
 
 	// stuff for scene antialiasing
-//	static final int				NUM_ACCUMULATION_SAMPLES	= 8;
+	//	static final int				NUM_ACCUMULATION_SAMPLES	= 8;
 
-//	static final float				ACCUM_SAMPLES_X[]			= {-0.54818f, 0.56438f, 0.39462f, -0.54498f, -0.83790f,
-//		-0.39263f, 0.32254f, 0.84216f};
+	//	static final float				ACCUM_SAMPLES_X[]			= {-0.54818f, 0.56438f, 0.39462f, -0.54498f, -0.83790f,
+	//		-0.39263f, 0.32254f, 0.84216f};
 
-//	static final float				ACCUM_SAMPLES_Y[]			= {0.55331f, -0.53495f, 0.41540f, -0.52829f, 0.82102f,
-//		-0.27383f, 0.09133f, -0.84399f};
+	//	static final float				ACCUM_SAMPLES_Y[]			= {0.55331f, -0.53495f, 0.41540f, -0.52829f, 0.82102f,
+	//		-0.27383f, 0.09133f, -0.84399f};
 
-//	static final float				accumValue					= 1.0f / NUM_ACCUMULATION_SAMPLES;
+	//	static final float				accumValue					= 1.0f / NUM_ACCUMULATION_SAMPLES;
 
 	// The following are Render arguments
 	static final int				RENDER						= 0;
@@ -133,10 +128,10 @@ class Renderer extends J3dThread {
 	Screen3D						offScreen;
 
 	// full screen anti-aliasing projection matrices
-//	Transform3D						accumLeftProj				= new Transform3D();
-//	Transform3D						accumRightProj				= new Transform3D();
-//	Transform3D						accumInfLeftProj			= new Transform3D();
-//	Transform3D						accumInfRightProj			= new Transform3D();
+	//	Transform3D						accumLeftProj				= new Transform3D();
+	//	Transform3D						accumRightProj				= new Transform3D();
+	//	Transform3D						accumInfLeftProj			= new Transform3D();
+	//	Transform3D						accumInfRightProj			= new Transform3D();
 
 	// rendering messages
 	J3dMessage						m[];
@@ -196,7 +191,7 @@ class Renderer extends J3dThread {
 		Object firstArg;
 		View view = null;
 		int stereo_mode;
-		int num_stereo_passes=1;//, num_accum_passes = 1;
+		int num_stereo_passes = 1;//, num_accum_passes = 1;
 		int pass, i, j;
 		//boolean doAccum = false;
 		//double accumDx = 0.0f, accumDy = 0.0f;
@@ -915,7 +910,6 @@ class Renderer extends J3dThread {
 							}
 							canvas.drawingSurfaceObject.unLock();
 						} else {
-
 							if (canvas.isRunning) {
 								canvas.makeCtxCurrent();
 							}
@@ -1021,62 +1015,6 @@ class Renderer extends J3dThread {
 								sharedStereoZBuffer = false;
 							}
 
-							// full screen anti-aliasing setup
-							/*if (canvas.view.getSceneAntialiasingEnable() && canvas.sceneAntialiasingAvailable) {
-
-								if (((canvas.extensionsSupported & Canvas3D.MULTISAMPLE) == 0)
-									|| !canvas.sceneAntialiasingMultiSamplesAvailable) {
-									doAccum = true;
-									num_accum_passes = NUM_ACCUMULATION_SAMPLES;
-
-									System.arraycopy(cvCache.getLeftProjection().mat, 0, accumLeftProj.mat, 0, 16);
-
-									accumDxFactor = (canvas.canvasViewCache.getPhysicalWindowWidth()
-														/ canvas.canvasViewCache.getCanvasWidth())
-													* canvas.view.fieldOfView;
-
-									accumDyFactor = (canvas.canvasViewCache.getPhysicalWindowHeight()
-														/ canvas.canvasViewCache.getCanvasHeight())
-													* canvas.view.fieldOfView;
-
-									accumLeftX = accumLeftProj.mat [3];
-									accumLeftY = accumLeftProj.mat [7];
-
-									if (useStereo) {
-										System.arraycopy(cvCache.getRightProjection().mat, 0, accumRightProj.mat, 0,
-												16);
-										accumRightX = accumRightProj.mat [3];
-										accumRightY = accumRightProj.mat [7];
-									}
-
-									if (renderBin.geometryBackground != null) {
-										System.arraycopy(cvCache.getInfLeftProjection().mat, 0, accumInfLeftProj.mat, 0,
-												16);
-										accumInfLeftX = accumInfLeftProj.mat [3];
-										accumInfLeftY = accumInfLeftProj.mat [7];
-										if (useStereo) {
-											System.arraycopy(cvCache.getInfRightProjection().mat, 0,
-													accumInfRightProj.mat, 0, 16);
-											accumInfRightX = accumInfRightProj.mat [3];
-											accumInfRightY = accumInfRightProj.mat [7];
-										}
-									}
-								} else {
-
-									if (!canvas.isAntialiasingSet()) {
-										// System.err.println("Renderer : Enable FullSceneAntialiasing");
-
-										canvas.setFullSceneAntialiasing(canvas.ctx, true);
-									}
-								}
-							} else {
-
-								if (canvas.isAntialiasingSet()) {
-									// System.err.println("Renderer : Disable SceneAntialiasing");
-									canvas.setFullSceneAntialiasing(canvas.ctx, false);
-								}
-							}*/
-
 							// background geometry setup
 							if (renderBin.geometryBackground != null) {
 								renderBin.updateInfVworldToVpc();
@@ -1084,14 +1022,11 @@ class Renderer extends J3dThread {
 
 							// setup default render mode - render to both eyes
 							canvas.setRenderMode(canvas.ctx, Canvas3D.FIELD_ALL, canvas.useDoubleBuffer);
-
-							// clear background if not full screen antialiasing
-							// and not in stereo mode
+							
+							// clear background if not in stereo mode
 							if (!sharedStereoZBuffer) {
 								BackgroundRetained bg = renderBin.background;
-
 								canvas.clear(bg, cvWidth, cvHeight);
-
 							}
 
 							// handle preRender callback
@@ -1119,162 +1054,218 @@ class Renderer extends J3dThread {
 								canvas.offScreenRendering = false;
 								break doneRender;
 							}
+							///////////////////////////////////////////////////////////////////////////////////////////////////////
+							//TODO:(and I guess a water reflection loop too?
+							//Water reflection is per canvas3D and view as it requires the current camera projection
+
+							
+							// Note that lights are a renderbin issue as they are environmental (and frustum clipped for scope)
+							// so light maps can be added to the light itself per render loop
+							// not the scope of lights is based on visible geometry but the geometry required for renderering
+							// must be the frustum plus the frustum projected at the light
+							
+							//TODO: check if shadowmap enabled, by having a variable based on shadow enabled lights in scene
+							boolean doShadowPass = Pipeline.getPipeline() instanceof Jogl2es2Pipeline;
+							if (doShadowPass) {
+								
+								ArrayList<LightRetained> mappedLts = new ArrayList<LightRetained>();
+								// get all lights from renderbin that influence view frustum render atoms
+								int sz = renderBin.renderAtoms.size();
+								//TODO: is this just enormous?
+								for (int n = 0; n < sz; n++) {
+									RenderAtom ra = renderBin.renderAtoms.get(n);
+								  
+								    if (!ra.inRenderBin())
+									continue;
+
+								    LightRetained[] lights = renderBin.universe.renderingEnvironmentStructure.getInfluencingLights(ra, view);
+								    for (i=0; i < lights.length; i++) {
+								    	LightRetained light = lights[i];
+									    if (!mappedLts.contains(light)) {									    	
+									    	mappedLts.add(light);
+									    	if(light.hasShadowMap) {
+										    	if( light instanceof DirectionalLightRetained) {
+										    		DirectionalLightRetained dlr = (DirectionalLightRetained)light;
+										    	
+										    		//FIXME: all calls here taht use the pipeline should ask teh canvas3d to do the actual call
+										    		//TODO: check if shadow map supported on pipeline (not for ffp)
+													Jogl2es2Pipeline jogl2es2Pipeline = ((Jogl2es2Pipeline)Pipeline.getPipeline());
+
+													// TODO :give the canvas the depth buffer details so we are rendering to aFBO not the screen
+													jogl2es2Pipeline.bindToShadowDepthBuffer(canvas.ctx, light);
+
+										
+												
+													
+													//TODO:canvas3d frustum are used by the rendermethod for culling
+													//TODO: dirty hack instead of setting the canvas to a no clip plane set
+													VirtualUniverse.mc.viewFrustumCulling = false;
+
+													//tell things to use a special depth only shader
+													jogl2es2Pipeline.enableOverrideShadowDepthShader(canvas.ctx, light, true);
+													
+													
+													Transform3D lightLocation = new Transform3D();
+													// flip direction to position
+													Point3d eye = new Point3d(dlr.xformDirection);
+													eye.scale(-10f);// used to flip dir if -1
+													Point3d center = new Point3d(0,0,0);
+													Vector3d up = new Vector3d(0, 0, -1);													
+													// to make sure the up is not collinear with z only eye
+													if (eye.x == 0 && eye.y == 0) {
+														up.y = 1;
+													}													 
+													lightLocation.lookAt( eye, center, up);
+													canvas.vpcToEc = new Transform3D(lightLocation);
+													canvas.vworldToEc.mul(canvas.vpcToEc, cvCache.getInfVworldToVpc());
+													
+													
+													//this bad boy is a nice directional light orthographic projection from eye to screen 
+													Transform3D lightProj = new Transform3D();
+													float near_plane = 0.1f, far_plane = 64.0f;
+													
+													// see the JavaDoc for this method regarding opengl difference
+													lightProj.ortho(-5.0f, 5.0f, -5.0f, 5.0f, near_plane, far_plane);												
+													canvas.setProjectionMatrix(canvas.ctx, lightProj);													
+													
+													// now combine and set for the shaders to receive
+													//java proj matrix have reverse z clips vs opengl!! @see  setProjectionMatrix 
+													lightProj.set(new double[] {
+													lightProj.mat[0],lightProj.mat[1],lightProj.mat[2],lightProj.mat[3],    
+													lightProj.mat[4],lightProj.mat[5],lightProj.mat[6],lightProj.mat[7], 
+													-lightProj.mat[8],-lightProj.mat[9],-lightProj.mat[10],-lightProj.mat[11], 
+													lightProj.mat[12],lightProj.mat[13],lightProj.mat[14],lightProj.mat[15], }
+													);		
+													// we add the projection and view into one (called proj becuse we project to it)
+													lightProj.mul(lightLocation);
+													
+													// don't point take copy, possibly not needed
+													light.projMatrix = new double[] {
+														lightProj.mat[0],lightProj.mat[1],lightProj.mat[2],lightProj.mat[3],    
+														lightProj.mat[4],lightProj.mat[5],lightProj.mat[6],lightProj.mat[7], 
+														lightProj.mat[8],lightProj.mat[9],lightProj.mat[10],lightProj.mat[11], 
+														lightProj.mat[12],lightProj.mat[13],lightProj.mat[14],lightProj.mat[15], };
+																							
+													// render opaque geometry
+													renderBin.renderOpaque(canvas);
+		
+													// render ordered geometry
+													renderBin.renderOrdered(canvas);
+		
+													//TODO:  tell things to use a special depth and color type shader(for transparent textures)
+		
+													// render transparent geometry
+													renderBin.renderTransparent(canvas);
+					
+													//Restore 
+													VirtualUniverse.mc.viewFrustumCulling = true;
+													jogl2es2Pipeline.enableOverrideShadowDepthShader(canvas.ctx, light, false);
+
+													
+												
+										    	} else if( light instanceof PointLightRetained) {
+										    		
+										    		//TODO: and spot light? or is that just a variation on the way the cube map is shaded?
+										    		
+										    	}
+										    	//ambient light skipped obviously
+									    	}
+									    }
+									}
+								}								
+								
+								// lights etc all need to be recalc as we are changing the view
+								canvas.canvasDirty |= Canvas3D.VIEW_MATRIX_DIRTY;
+								
+								// reset the viewport
+								canvas.setViewport(canvas.ctx, 0, 0, cvWidth, cvHeight);								
+								
+							}
+///////////////////////////////////////////////////////////////////////////////////////////////							
 
 							// render loop
 							for (pass = 0; pass < num_stereo_passes; pass++) {
-								//if (doAccum) {
-								//	canvas.clearAccum(canvas.ctx);
-								//}
 								canvas.setRenderMode(canvas.ctx, stereo_mode, canvas.useDoubleBuffer);
 
-								//for (apass = 0; apass < 1; apass++) {
+								// clear background for stereo 
+								if (sharedStereoZBuffer) {
+									BackgroundRetained bg = renderBin.background;
+									canvas.clear(bg, cvWidth, cvHeight);
+								}
 
-									// jitter projection matrix and clear background
-									// for full screen anti-aliasing rendering
-									/*if (doAccum) {
-										accumDx = ACCUM_SAMPLES_X [apass] * accumDxFactor;
-										accumDy = ACCUM_SAMPLES_Y [apass] * accumDyFactor;
-
-										accumLeftProj.mat [3] = accumLeftX + accumLeftProj.mat [0] * accumDx
-																+ accumLeftProj.mat [1] * accumDy;
-
-										accumLeftProj.mat [7] = accumLeftY + accumLeftProj.mat [4] * accumDx
-																+ accumLeftProj.mat [5] * accumDy;
-
-										if (useStereo) {
-											accumRightProj.mat [3] = accumRightX + accumRightProj.mat [0] * accumDx
-																		+ accumRightProj.mat [1] * accumDy;
-
-											accumRightProj.mat [7] = accumRightY + accumRightProj.mat [4] * accumDx
-																		+ accumRightProj.mat [5] * accumDy;
-										}
-
-										if (renderBin.geometryBackground != null) {
-											accumInfLeftProj.mat [3] = accumInfLeftX
-																		+ accumInfLeftProj.mat [0] * accumDx
-																		+ accumInfLeftProj.mat [1] * accumDy;
-
-											accumInfLeftProj.mat [7] = accumInfLeftY
-																		+ accumInfLeftProj.mat [4] * accumDx
-																		+ accumInfLeftProj.mat [5] * accumDy;
-
-											if (useStereo) {
-												accumInfRightProj.mat [3] = accumInfRightX
-																			+ accumInfRightProj.mat [0] * accumDx
-																			+ accumInfRightProj.mat [1] * accumDy;
-
-												accumInfRightProj.mat [7] = accumInfRightY
-																			+ accumInfRightProj.mat [4] * accumDx
-																			+ accumInfRightProj.mat [5] * accumDy;
-											}
-										}
-									}*/
-
-									// clear background for stereo and
-									// accumulation buffer cases
-									if (sharedStereoZBuffer) {
-										BackgroundRetained bg = renderBin.background;
-
-										canvas.clear(bg, cvWidth, cvHeight);
-
-									}
-
-									// render background geometry
-									if (renderBin.geometryBackground != null) {
-
-										// setup rendering matrices
-										if (pass == 0) {
-											canvas.vpcToEc = cvCache.getInfLeftVpcToEc();
-											//if (doAccum) {
-											//	canvas.setProjectionMatrix(canvas.ctx, accumInfLeftProj);
-											//} else {
-												canvas.setProjectionMatrix(canvas.ctx, cvCache.getInfLeftProjection());
-											//}
-										} else {
-											canvas.vpcToEc = cvCache.getInfRightVpcToEc();
-											//if (doAccum) {
-											//	canvas.setProjectionMatrix(canvas.ctx, accumInfRightProj);
-											//} else {
-												canvas.setProjectionMatrix(canvas.ctx, cvCache.getInfRightProjection());
-											//}
-										}
-										canvas.vworldToEc.mul(canvas.vpcToEc, cvCache.getInfVworldToVpc());
-
-										// render background geometry
-										renderBin.renderBackground(canvas);
-									}
-
+								// render background geometry
+								if (renderBin.geometryBackground != null) {
 									// setup rendering matrices
 									if (pass == 0) {
-										canvas.vpcToEc = cvCache.getLeftVpcToEc();
-										//if (doAccum) {
-										//	canvas.setProjectionMatrix(canvas.ctx, accumLeftProj);
-										//} else {
-											canvas.setProjectionMatrix(canvas.ctx, cvCache.getLeftProjection());
-										//}
+										canvas.vpcToEc = cvCache.getInfLeftVpcToEc();
+										canvas.setProjectionMatrix(canvas.ctx, cvCache.getInfLeftProjection());
 									} else {
-										canvas.vpcToEc = cvCache.getRightVpcToEc();
-										//if (doAccum) {
-										//	canvas.setProjectionMatrix(canvas.ctx, accumRightProj);
-										//} else {
-											canvas.setProjectionMatrix(canvas.ctx, cvCache.getRightProjection());
-										//}
+										canvas.vpcToEc = cvCache.getInfRightVpcToEc();
+										canvas.setProjectionMatrix(canvas.ctx, cvCache.getInfRightProjection());
 									}
-									canvas.vworldToEc.mul(canvas.vpcToEc, cvCache.getVworldToVpc());
+									canvas.vworldToEc.mul(canvas.vpcToEc, cvCache.getInfVworldToVpc());
 
-									synchronized (cvCache) {
-										if (pass == 0) {
-											canvas.setFrustumPlanes(cvCache.getLeftFrustumPlanesInVworld());
-										} else {
-											canvas.setFrustumPlanes(cvCache.getRightFrustumPlanesInVworld());
-										}
+									// render background geometry
+									renderBin.renderBackground(canvas);
+								}
+
+								// setup rendering matrices
+								if (pass == 0) {
+									canvas.vpcToEc = cvCache.getLeftVpcToEc();
+									canvas.setProjectionMatrix(canvas.ctx, cvCache.getLeftProjection());
+								} else {
+									canvas.vpcToEc = cvCache.getRightVpcToEc();
+									canvas.setProjectionMatrix(canvas.ctx, cvCache.getRightProjection());
+								}
+								canvas.vworldToEc.mul(canvas.vpcToEc, cvCache.getVworldToVpc());
+
+								synchronized (cvCache) {
+									if (pass == 0) {
+										canvas.setFrustumPlanes(cvCache.getLeftFrustumPlanesInVworld());
+									} else {
+										canvas.setFrustumPlanes(cvCache.getRightFrustumPlanesInVworld());
 									}
+								}
 
-									// Force view matrix dirty for each eye.
-									if (useStereo) {
-										canvas.canvasDirty |= Canvas3D.VIEW_MATRIX_DIRTY;
+								// Force view matrix dirty for each eye.
+								if (useStereo) {
+									canvas.canvasDirty |= Canvas3D.VIEW_MATRIX_DIRTY;
+								}
+
+								// render opaque geometry
+								renderBin.renderOpaque(canvas);
+
+								// render ordered geometry
+								renderBin.renderOrdered(canvas);
+
+								// handle renderField callback
+								if (VirtualUniverse.mc.doDsiRenderLock) {
+									canvas.drawingSurfaceObject.unLock();
+								}
+								canvas.view.inCanvasCallback = true;
+								try {
+									canvas.renderField(stereo_mode);
+								} catch (RuntimeException e) {
+									System.err.println("Exception occurred during Canvas3D callback:");
+									e.printStackTrace();
+								} catch (Error e) {
+									// Issue 264 - catch Error so Renderer doesn't die
+									System.err.println("Error occurred during Canvas3D callback:");
+									e.printStackTrace();
+								}
+								canvas.view.inCanvasCallback = false;
+								if ((VirtualUniverse.mc.doDsiRenderLock)
+									&& (!canvas.drawingSurfaceObject.renderLock())) {
+									if ((offBufRetained != null) && offBufRetained.isByReference()) {
+										offBufRetained.geomLock.unLock();
 									}
+									canvas.offScreenRendering = false;
+									break doneRender;
+								}
 
-									// render opaque geometry
-									renderBin.renderOpaque(canvas);
+								// render transparent geometry
+								renderBin.renderTransparent(canvas);
 
-									// render ordered geometry
-									renderBin.renderOrdered(canvas);
-
-									// handle renderField callback
-									if (VirtualUniverse.mc.doDsiRenderLock) {
-										canvas.drawingSurfaceObject.unLock();
-									}
-									canvas.view.inCanvasCallback = true;
-									try {
-										canvas.renderField(stereo_mode);
-									} catch (RuntimeException e) {
-										System.err.println("Exception occurred during Canvas3D callback:");
-										e.printStackTrace();
-									} catch (Error e) {
-										// Issue 264 - catch Error so Renderer doesn't die
-										System.err.println("Error occurred during Canvas3D callback:");
-										e.printStackTrace();
-									}
-									canvas.view.inCanvasCallback = false;
-									if ((VirtualUniverse.mc.doDsiRenderLock)
-										&& (!canvas.drawingSurfaceObject.renderLock())) {
-										if ((offBufRetained != null) && offBufRetained.isByReference()) {
-											offBufRetained.geomLock.unLock();
-										}
-										canvas.offScreenRendering = false;
-										break doneRender;
-									}
-
-									// render transparent geometry
-									renderBin.renderTransparent(canvas);
-
-									//if (doAccum)
-									//	canvas.accum(canvas.ctx, accumValue);
-								//}
-
-								//if (doAccum)
-								//	canvas.accumReturn(canvas.ctx);
 								if (useStereo) {
 									stereo_mode = Canvas3D.FIELD_RIGHT;
 									canvas.rightStereoPass = true;

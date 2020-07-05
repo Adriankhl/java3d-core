@@ -29,6 +29,7 @@ package org.jogamp.java3d;
 import java.util.Iterator;
 
 import org.jogamp.vecmath.Color3f;
+import org.jogamp.vecmath.Vector3f;
 
 /**
  * The Light leaf node is an abstract class that defines a set of
@@ -631,10 +632,31 @@ return ((LightRetained)this.retained).getAllScopes();
 	    if(!this.getCapability(ALLOW_INFLUENCING_BOUNDS_READ))
 	    	throw new CapabilityNotSetException(J3dI18N.getString("Light12"));
 
-	return ((LightRetained)this.retained).getInfluencingBoundingLeaf();
+    	return ((LightRetained)this.retained).getInfluencingBoundingLeaf();
     }
 
+    public void setShadowMap(boolean generateShadowMap) {
+    	//FIXME: give it a shadow map cap bits
+        if (isLiveOrCompiled())
+	    if(!this.getCapability(ALLOW_INFLUENCING_BOUNDS_WRITE))
+	        throw new CapabilityNotSetException("setShadowMap" +
+				       J3dI18N.getString("Light11"));
 
+		if (isLive())
+		    ((LightRetained)this.retained).setShadowMap(generateShadowMap);
+		else
+		    ((LightRetained)this.retained).initShadowMap(generateShadowMap);
+    }
+    
+    public boolean hasShadowMap() {
+    	//FIXME: give it a shadow map cap bits
+        if (isLiveOrCompiled())
+	    if(!this.getCapability(ALLOW_INFLUENCING_BOUNDS_READ))
+	        throw new CapabilityNotSetException(
+				    J3dI18N.getString("Light12"));
+
+        return ((LightRetained)this.retained).hasShadowMap();
+    }
 
    /**
      * Copies all Light information from

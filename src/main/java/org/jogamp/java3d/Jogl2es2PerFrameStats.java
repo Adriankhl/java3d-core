@@ -96,6 +96,7 @@ public class Jogl2es2PerFrameStats
 	public int setViewport;
 	public int freeTexture;
 	public int generateTexID;
+	public int generateFrameBufferID;
 	public int setDepthBufferWriteEnable;
 	public int redundantUseProgram;
 

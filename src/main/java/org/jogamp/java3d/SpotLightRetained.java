@@ -208,7 +208,8 @@ class SpotLightRetained extends PointLightRetained {
                 xformPosition.x, xformPosition.y,
                 xformPosition.z, spreadAngle, concentration,
                 xformDirection.x, xformDirection.y,
-                xformDirection.z);
+                xformDirection.z, shadowMapSamplerId, 
+                projMatrix);
     }
 
 

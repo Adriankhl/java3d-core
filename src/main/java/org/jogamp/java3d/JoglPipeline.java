@@ -3426,7 +3426,8 @@ class JoglPipeline extends Pipeline {
     @Override
     void updateDirectionalLight(Context ctx,
             int lightSlot, float red, float green,
-            float blue, float dirx, float diry, float dirz) {
+            float blue, float dirx, float diry, float dirz, 
+            int shadowMapSamplerId, double[] projMatrix) {
         if (VERBOSE) System.err.println("JoglPipeline.updateDirectionalLight()");
 
 		GL2 gl = context(ctx).getGL().getGL2();
@@ -3464,7 +3465,8 @@ class JoglPipeline extends Pipeline {
     void updatePointLight(Context ctx,
             int lightSlot, float red, float green,
             float blue, float attenx, float atteny, float attenz,
-            float posx, float posy, float posz) {
+            float posx, float posy, float posz, 
+            int shadowMapSamplerId, double[] projMatrix) {
         if (VERBOSE) System.err.println("JoglPipeline.updatePointLight()");
 
 		GL2 gl = context(ctx).getGL().getGL2();
@@ -3503,7 +3505,7 @@ class JoglPipeline extends Pipeline {
             float blue, float attenx, float atteny, float attenz,
             float posx, float posy, float posz, float spreadAngle,
             float concentration, float dirx, float diry,
-            float dirz) {
+            float dirz, int shadowMapSamplerId, double[] projMatrix) {
         if (VERBOSE) System.err.println("JoglPipeline.updateSpotLight()");
 
 		GL2 gl = context(ctx).getGL().getGL2();

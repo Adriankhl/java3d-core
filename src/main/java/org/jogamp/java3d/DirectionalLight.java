@@ -163,9 +163,10 @@ public class DirectionalLight extends Light {
 	        throw new CapabilityNotSetException(
 				    J3dI18N.getString("DirectionalLight2"));
 
-	((DirectionalLightRetained)this.retained).getDirection(direction);
+        ((DirectionalLightRetained)this.retained).getDirection(direction);
     }
-
+  
+    
     /**
      * Used to create a new instance of the node.  This routine is called
      * by <code>cloneTree</code> to duplicate the current node.

@@ -186,7 +186,7 @@ class DirectionalLightRetained extends LightRetained
         Pipeline.getPipeline().updateDirectionalLight(ctx,
                 lightSlot, color.x, color.y, color.z,
                 xformDirection.x, xformDirection.y,
-                xformDirection.z);
+                xformDirection.z, shadowMapSamplerId, projMatrix);
     }
 
     // Clones only the retained side, internal use only

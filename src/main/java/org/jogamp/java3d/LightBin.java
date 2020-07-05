@@ -76,11 +76,10 @@ class LightBin extends Object implements ObjectUpdate {
      */
     EnvironmentSet environmentSetList = null;
 
-/**
- * List of envSet to be added for the next iteration
- */
-ArrayList<EnvironmentSet> insertEnvSet = new ArrayList<EnvironmentSet>();
-
+	/**
+	 * List of envSet to be added for the next iteration
+	 */
+	ArrayList<EnvironmentSet> insertEnvSet = new ArrayList<EnvironmentSet>();
 
     /**
      * cache of the canvasDirty
@@ -99,11 +98,11 @@ ArrayList<EnvironmentSet> insertEnvSet = new ArrayList<EnvironmentSet>();
      */
     int lightDirtyMask = 0;
 
-/**
- * List of pointLts in this lightbin Need to reload these lights when vworld
- * scale changes
- */
-ArrayList<PointLightRetained> pointLts = new ArrayList<PointLightRetained>();
+	/**
+	 * List of pointLts in this lightbin Need to reload these lights when vworld
+	 * scale changes
+	 */
+	ArrayList<PointLightRetained> pointLts = new ArrayList<PointLightRetained>();
     int[] pointLtsSlotIndex;
 
     // OrderedGroup info
@@ -114,29 +113,27 @@ ArrayList<PointLightRetained> pointLts = new ArrayList<PointLightRetained>();
     // background node that contains geometry
     BackgroundRetained geometryBackground = null;
 
-
-
     LightBin(int maxLights, RenderBin rb, boolean isOpaque) {
         this.maxLights = maxLights;
         this.numEmptySlots = maxLights;
-	lights = new LightRetained[maxLights];
-	lightsRef = new int[maxLights];
-	renderBin = rb;
+		lights = new LightRetained[maxLights];
+		lightsRef = new int[maxLights];
+		renderBin = rb;
     }
 
     void reset(boolean inOpaque) {
-	prev = null;
-	next = null;
-        orderedCollection = null;
-	environmentSetList = null;
-	onUpdateList = false;
+		prev = null;
+		next = null;
+	    orderedCollection = null;
+		environmentSetList = null;
+		onUpdateList = false;
         geometryBackground = null;
-	// No need to reset the lights and lightRef
+        // No need to reset the lights and lightRef
         if (J3dDebug.devPhase && J3dDebug.debug) {
-	    for (int i=0; i<maxLights; i++) {
-	        J3dDebug.doAssert(lights[i] == null, "lights[i] == null");
-	        J3dDebug.doAssert(lightsRef[i] == 0, "lightsRef[i] == 0");
-	    }
+		    for (int i=0; i<maxLights; i++) {
+		        J3dDebug.doAssert(lights[i] == null, "lights[i] == null");
+		        J3dDebug.doAssert(lightsRef[i] == 0, "lightsRef[i] == 0");
+		    }
         }
     }
 
@@ -443,22 +440,30 @@ ArrayList<PointLightRetained> pointLts = new ArrayList<PointLightRetained>();
 
 	    cv.canvasDirty &= ~Canvas3D.LIGHTBIN_DIRTY;
 	}
-	else if ((pointLts.size() > 0) && ((cv.canvasDirty & Canvas3D.VIEW_MATRIX_DIRTY) != 0 )) {
-            if (geometryBackground == null) {
-		scale = cv.canvasViewCache.getVworldToCoexistenceScale();
-                cv.setModelViewMatrix(cv.ctx, cv.vpcToEc.mat,
-				      renderBin.vworldToVpc);
-	    } else {
-		scale = cv.canvasViewCache.getInfVworldToCoexistenceScale();
-                cv.setModelViewMatrix(cv.ctx, cv.vpcToEc.mat,
-				      renderBin.infVworldToVpc);
-	    }
-	    for (i = 0; i < pointLts.size(); i++) {
+	
+	// all lights require updating on view changes, including directionals now
+	else if ((cv.canvasDirty & Canvas3D.VIEW_MATRIX_DIRTY) != 0 ) {
+			if (geometryBackground == null) {
+				scale = cv.canvasViewCache.getVworldToCoexistenceScale();
+				cv.setModelViewMatrix(cv.ctx, cv.vpcToEc.mat, renderBin.vworldToVpc);
+			} else {
+				scale = cv.canvasViewCache.getInfVworldToCoexistenceScale();
+				cv.setModelViewMatrix(cv.ctx, cv.vpcToEc.mat, renderBin.infVworldToVpc);
+			}
+
+			for (i = 0; i < maxLights; i++) {
+				if (lights [i] != null) {
+					cv.lights [i] = lights [i];
+					cv.frameCount [i] = frameCount;
+					lights [i].update(cv.ctx, i, scale);
+				}
+			}
+	   /* for (i = 0; i < pointLts.size(); i++) {
 			PointLightRetained lt = pointLts.get(i);
-		lt.update(cv.ctx, pointLtsSlotIndex[i], scale);
+				lt.update(cv.ctx, pointLtsSlotIndex[i], scale);
                 cv.lights[pointLtsSlotIndex[i]] = lt;
                 cv.frameCount[pointLtsSlotIndex[i]] = frameCount;
-	    }
+	    }*/
 	}
     }
 }
