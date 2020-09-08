@@ -4,7 +4,7 @@
 
 	<groupId>org.jogamp.java3d</groupId>
 	<artifactId>java3d-core</artifactId>
-	<version>1.7.0</version>
+	<version>1.7.0-khl</version>
 
 	<name>Java 3D Core</name>
 	<description>3D Graphics API for the Java Platform</description>
@@ -95,6 +95,13 @@
 		<tag>HEAD</tag>
 		<url>https://github.com/philjord/java3d-core</url>
 	</scm>
+
+        <repositories>
+                <repository>
+                        <id>jitpack.io</id>
+                        <url>https://jitpack.io</url>
+                </repository>
+        </repositories>
 	
 	<properties>
 		<jogamp.version>2.3.2</jogamp.version>
@@ -127,7 +134,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>com.github.Adriankhl</groupId>
 			<artifactId>vecmath</artifactId>
 			<version>${project.version}</version>
 		</dependency>
